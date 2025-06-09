@@ -1,24 +1,29 @@
-package roomescape.application;
+package roomescape.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import roomescape.common.event.EventPublisher;
 import roomescape.payment.domain.Payment;
 import roomescape.payment.domain.PaymentStatus;
 import roomescape.payment.repository.PaymentRepository;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.service.dto.UncompletedPaymentDeletionRequestedEvent;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReservationPaymentDeletionService {
+public class ReservationDeletionIfPaymentFailedService {
 
     private final PaymentRepository paymentRepository;
     private final ReservationRepository reservationRepository;
 
-    @Transactional
+    private final EventPublisher eventPublisher;
+
     public void deleteIfNotPaid(Long reservationId) {
+
+        eventPublisher.raise(new UncompletedPaymentDeletionRequestedEvent(reservationId));
+
         Payment payment = paymentRepository.findByReservationId(reservationId)
                 .orElseThrow(() -> {
                     log.error("결제 정보 없음 - reservationId={}", reservationId);

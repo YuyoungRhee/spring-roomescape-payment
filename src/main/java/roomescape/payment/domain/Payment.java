@@ -89,4 +89,8 @@ public class Payment {
         this.orderId = orderId;
         this.amount = amount;
     }
+
+    public boolean cannotDeletionStatus() {
+        return status != PaymentStatus.PENDING && status != PaymentStatus.NOT_PAID;
+    }
 }

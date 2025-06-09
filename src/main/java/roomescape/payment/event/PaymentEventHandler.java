@@ -6,11 +6,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import roomescape.exception.NotFoundException;
+import roomescape.payment.domain.Payment;
+import roomescape.payment.repository.PaymentRepository;
 import roomescape.payment.service.PaymentEventProcessor;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.dto.ReservationCreateEvent;
 import roomescape.reservation.service.dto.ReservationDeleteEvent;
+import roomescape.reservation.service.dto.UncompletedPaymentDeletionRequestedEvent;
 import roomescape.reservation.service.dto.WaitingApprovedEvent;
 
 @Slf4j
@@ -18,6 +21,7 @@ import roomescape.reservation.service.dto.WaitingApprovedEvent;
 @RequiredArgsConstructor
 public class PaymentEventHandler {
 
+    private final PaymentRepository paymentRepository;
     private final ReservationRepository reservationRepository;
     private final PaymentEventProcessor paymentEventProcessor;
 
@@ -57,5 +61,23 @@ public class PaymentEventHandler {
                     log.warn("예약 조회 실패 - reservationId={}", reservationId);
                     return new NotFoundException("예약이 존재하지 않습니다, id: " + reservationId);
                 });
+    }
+
+    @EventListener(UncompletedPaymentDeletionRequestedEvent.class)
+    public void handleUnCompletedPaymentDelete(UncompletedPaymentDeletionRequestedEvent event) {
+        Long reservationId = event.reservationId();
+        Payment payment = paymentRepository.findByReservationId(reservationId)
+                .orElseThrow(() -> {
+                    log.error("결제 정보 없음 - reservationId={}", reservationId);
+                    return new IllegalStateException("결제 정보 없음");
+                });
+
+        if (payment.cannotDeletionStatus()) {
+            log.error("삭제가 불가능한 결제 상태로 인한 삭제 불가 - reservationId={}, paymentId={}", reservationId, payment.getId());
+            throw new IllegalStateException("삭제가 불가능한 결제 상태입니다");
+        }
+
+        paymentRepository.deleteByReservationId(reservationId);
+        log.info("예약에 대한 결제 삭제 됨 - reservationId={}, paymentId={}", reservationId, payment.getId());
     }
 }

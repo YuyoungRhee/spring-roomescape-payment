@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import roomescape.application.ReservationPaymentDeletionService;
+import roomescape.reservation.service.ReservationDeletionIfPaymentFailedService;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ReservationWebSocketHandler extends TextWebSocketHandler {
 
-    private final ReservationPaymentDeletionService reservationPaymentDeletionService;
+    private final ReservationDeletionIfPaymentFailedService reservationDeletionIfPaymentFailedService;
     private final Map<String, Long> sessionToReservation = new ConcurrentHashMap<>();
 
     @Override
@@ -36,7 +36,7 @@ public class ReservationWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long reservationId = sessionToReservation.remove(session.getId());
-        reservationPaymentDeletionService.deleteIfNotPaid(reservationId);
+        reservationDeletionIfPaymentFailedService.deleteIfNotPaid(reservationId);
 
         log.info("WebSocket 연결 종료 - reservationId={}", reservationId);
     }
