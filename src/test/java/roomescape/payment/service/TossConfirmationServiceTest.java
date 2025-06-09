@@ -116,7 +116,7 @@ class TossConfirmationServiceTest {
                 .willReturn(mockResponse);
 
         // when
-        tossConfirmationService.reserveAndPay(request, LoginMember.from(member));
+        tossConfirmationService.createPaymentAndConfirm(request, LoginMember.from(member));
 
         // then
         Payment payment = paymentRepository.findByPaymentKey(paymentKey).orElseThrow();
@@ -160,7 +160,7 @@ class TossConfirmationServiceTest {
                 .willThrow(new TossPaymentException(HttpStatus.BAD_REQUEST, "결제 승인에 실패했습니다.", false));
 
         // when & then
-        assertThatThrownBy(() -> tossConfirmationService.reserveAndPay(request, LoginMember.from(member)))
+        assertThatThrownBy(() -> tossConfirmationService.createPaymentAndConfirm(request, LoginMember.from(member)))
                 .isInstanceOf(TossPaymentException.class)
                 .hasMessageContaining("결제 승인에 실패했습니다.");
 
@@ -199,7 +199,7 @@ class TossConfirmationServiceTest {
                 .willThrow(new PaymentTimeoutException("결제 승인 시간이 초과되었습니다."));
 
         // when & then
-        assertThatThrownBy(() -> tossConfirmationService.reserveAndPay(request, LoginMember.from(member)))
+        assertThatThrownBy(() -> tossConfirmationService.createPaymentAndConfirm(request, LoginMember.from(member)))
                 .isInstanceOf(PaymentTimeoutException.class)
                 .hasMessageContaining("결제 승인 시간이 초과되었습니다.");
     }

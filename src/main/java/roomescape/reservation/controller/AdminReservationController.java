@@ -32,7 +32,7 @@ public class AdminReservationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationResponse saveReservation(@Valid @RequestBody final AdminReservationRequest request) {
-        return reservationService.registerReservation(
+        return reservationService.registerReservationForAdmin(
                 new CreateRegistrationCommand(request.memberId(), request.date(), request.timeId(), request.themeId())
         );
     }

@@ -153,5 +153,5 @@
 - [x] 2단계 - 내 예약 목록 조회 기능
     - [x] 내 예약 목록을 조회하는 API 구현
         - [x] GET /reservation/mine
-            - [x] 응답 reservation-mine.html page
+            - [x] 응답 mypage.html page
         - [x] 응답에 예약 status 추가

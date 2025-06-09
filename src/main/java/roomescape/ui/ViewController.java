@@ -39,9 +39,9 @@ public class ViewController {
         return "reservation";
     }
 
-    @GetMapping("/reservation-mine")
+    @GetMapping("/mypage")
     public String getMyReservationsPage() {
-        return "reservation-mine";
+        return "mypage";
     }
 
     @GetMapping("/admin/waiting")

@@ -9,6 +9,7 @@ import roomescape.exception.NotFoundException;
 import roomescape.payment.service.PaymentEventProcessor;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.service.dto.ReservationCreateEvent;
 import roomescape.reservation.service.dto.ReservationDeleteEvent;
 import roomescape.reservation.service.dto.WaitingApprovedEvent;
 
@@ -23,9 +24,17 @@ public class PaymentEventHandler {
     @EventListener(WaitingApprovedEvent.class)
     public void handleWaitingApproved(WaitingApprovedEvent event) {
         log.info("WaitingApprovedEvent 수신 - reservationId={}", event.reservationId());
+        saveNotPaidPaymentForReservation(event.reservationId());
+    }
 
-        Reservation reservation = getReservationById(event.reservationId());
+    @EventListener(ReservationCreateEvent.class)
+    public void handleReservationCreate(ReservationCreateEvent event) {
+        log.info("ReservationCreateEvent 수신 - reservationId={}", event.reservationId());
+        saveNotPaidPaymentForReservation(event.reservationId());
+    }
 
+    private void saveNotPaidPaymentForReservation(Long reservationId) {
+        Reservation reservation = getReservationById(reservationId);
         log.info("NotPaid 결제 저장 시작 - reservationId={}", reservation.getId());
         paymentEventProcessor.saveNotPaidPayment(reservation);
     }

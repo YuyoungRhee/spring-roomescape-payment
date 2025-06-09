@@ -1,4 +1,25 @@
+let ws;
+let isPaymentCompleted = false;
+
 document.addEventListener('DOMContentLoaded', () => {
+    //WebSocket 설정
+    const reservationId = document.getElementById("payment-button")?.dataset?.reservationId;
+    if (!reservationId) return;
+
+    // WebSocket 연결
+    ws = new WebSocket(`ws://localhost:8080/ws/reservations/${reservationId}`);
+
+    ws.onopen = () => {
+        console.log("✅ WebSocket 연결됨");
+    };
+
+    ws.onclose = () => {
+        console.log("❌ WebSocket 종료됨");
+        if (!isPaymentCompleted) {
+            alert("예약 유효 시간이 지나 결제가 취소되었습니다.");
+            window.location.href = "/reservation";
+        }
+    };
 
     // ------  결제위젯 초기화 ------
     // @docs https://docs.tosspayments.com/reference/widget-sdk#sdk-설치-및-초기화
@@ -15,6 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('payment-button').addEventListener('click', (event) => {
         const reservationId = event.target.dataset.reservationId;  // 버튼에 data-reservation-id 속성 있어야 함
         onPayButtonClick(reservationId, paymentWidget);
+    });
+
+    // 페이지 이탈 시 예약 취소 요청
+    window.addEventListener("beforeunload", () => {
+        if (isPaymentCompleted) return;  // 결제 성공했으면 삭제하지 않음
+
+        const reservationId = document.getElementById("payment-button").dataset.reservationId;
+        if (!reservationId) return;
+
+        fetch(`/reservations/${reservationId}/delete-if-unpaid`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+            keepalive: true
+        });
     });
 });
 
@@ -77,9 +113,26 @@ async function fetchReservationPayment(paymentData, reservationData) {
             });
         } else {
             console.log("예약 결제 성공!");
-            window.location.reload();
+            isPaymentCompleted = true;
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+
+            window.location.href = "/mypage";
         }
     }).catch(error => {
         console.error(error.message);
     });
 }
+
+window.addEventListener("beforeunload", () => {
+    if (isPaymentCompleted) return;
+
+    const reservationId = document.getElementById("payment-button")?.dataset?.reservationId;
+    if (!reservationId) return;
+
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+    }
+});

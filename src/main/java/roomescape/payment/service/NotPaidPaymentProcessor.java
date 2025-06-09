@@ -33,7 +33,7 @@ public class NotPaidPaymentProcessor {
         validateCanProcessStatus(payment);
         payment.assignPaymentInformationForPending(request.paymentKey(), request.orderId(), request.amount());
         payment.updateStatusTo(PaymentStatus.PENDING);
-        log.info("결제 준비 완료 - 예약ID={}, 상태={}", reservationId, PaymentStatus.PENDING);
+        log.info("결제 준비 완료 - reservationId={}, paymentStatus={}", reservationId, PaymentStatus.PENDING);
         return payment;
     }
 
@@ -42,7 +42,7 @@ public class NotPaidPaymentProcessor {
         if (reservation.isOwnedBy(loginMember.id())) {
             return;
         }
-        log.warn("예약 소유자 아님 - 요청자ID={}, 예약ID={}", loginMember.id(), reservationId);
+        log.warn("예약 소유자 아님 - 요청자 memberId={}, reservationId={}", loginMember.id(), reservationId);
         throw new TossPaymentException(HttpStatus.BAD_REQUEST, "본인의 예약만 결제할 수 있습니다.", false);
     }
 

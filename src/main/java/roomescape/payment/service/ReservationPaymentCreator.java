@@ -3,18 +3,14 @@ package roomescape.payment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import roomescape.auth.dto.LoginMember;
 import roomescape.exception.NotFoundException;
 import roomescape.payment.domain.Payment;
 import roomescape.payment.domain.PaymentStatus;
 import roomescape.payment.dto.ReservationPaymentRequest;
 import roomescape.payment.repository.PaymentRepository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.ReservationService;
-import roomescape.reservation.service.dto.CreateRegistrationCommand;
 
 @Slf4j
 @Component
@@ -26,19 +22,19 @@ public class ReservationPaymentCreator {
     private final ReservationRepository reservationRepository;
     private final ReservationService reservationService;
 
-    @Transactional
-    public void saveReservationAndPayment(final ReservationPaymentRequest request, final LoginMember loginMember) {
-        final ReservationResponse reservationResponse = reservationService.registerReservation(
-                new CreateRegistrationCommand(loginMember.id(), request.date(), request.timeId(), request.themeId())
-        );
-        final Reservation reservation = getReservationById(reservationResponse.id());
-
-        final Payment payment = createPendingPayment(request, reservation);
-        paymentRepository.save(payment);
-
-        log.info("예약 및 결제 저장 완료 - reservationId={}, paymentKey={}",
-                reservation.getId(), payment.getPaymentKey());
-    }
+//    @Transactional
+//    public void saveReservationAndPayment(final ReservationPaymentRequest request, final LoginMember loginMember) {
+//        final ReservationResponse reservationResponse = reservationService.registerReservation(
+//                new CreateRegistrationCommand(loginMember.id(), request.date(), request.timeId(), request.themeId())
+//        );
+//        final Reservation reservation = getReservationById(reservationResponse.id());
+//
+//        final Payment payment = createPendingPayment(request, reservation);
+//        paymentRepository.save(payment);
+//
+//        log.info("예약 및 결제 저장 완료 - reservationId={}, paymentKey={}",
+//                reservation.getId(), payment.getPaymentKey());
+//    }
 
     private Payment createPendingPayment(ReservationPaymentRequest request, Reservation reservation) {
         return Payment.builder()

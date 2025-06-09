@@ -9,7 +9,6 @@ import roomescape.exception.NotFoundException;
 import roomescape.payment.domain.Payment;
 import roomescape.payment.domain.PaymentStatus;
 import roomescape.payment.dto.PaymentRequest;
-import roomescape.payment.dto.ReservationPaymentRequest;
 import roomescape.payment.dto.TossPaymentRequest;
 import roomescape.payment.dto.TossPaymentResponse;
 import roomescape.payment.exception.PaymentTimeoutException;
@@ -28,13 +27,14 @@ public class TossConfirmationService {
     private final TossRestClient tossRestClient;
     private final PaymentRepository paymentRepository;
 
-    public void reserveAndPay(ReservationPaymentRequest reservationPaymentRequest, LoginMember loginMember) {
-        reservationPaymentCreator.saveReservationAndPayment(reservationPaymentRequest, loginMember);
-        confirmPayment(reservationPaymentRequest.toPaymentRequest());
-
-        log.info("예약+결제 완료 - memberId={}, paymentKey={}",
-                loginMember.id(), reservationPaymentRequest.paymentKey());
-    }
+//    public void createPaymentAndConfirm(ReservationPaymentRequest reservationPaymentRequest, LoginMember loginMember) {
+//        reservationPaymentCreator.saveReservationAndPayment(reservationPaymentRequest, loginMember);
+//
+//        confirmPayment(reservationPaymentRequest.toPaymentRequest());
+//
+//        log.info("예약+결제 완료 - memberId={}, paymentKey={}",
+//                loginMember.id(), reservationPaymentRequest.paymentKey());
+//    }
 
     private void confirmPayment(final PaymentRequest request) {
         TossPaymentRequest tossPaymentRequest = toTossPaymentRequestFrom(request);

@@ -38,7 +38,7 @@ public class ReservationController {
             @Valid @RequestBody final ReservationRequest request,
             final LoginMember member
     ) {
-        return reservationService.registerReservation(
+        return reservationService.registerReservationForMember(
                 new CreateRegistrationCommand(member.id(), request.date(), request.timeId(), request.themeId())
         );
     }

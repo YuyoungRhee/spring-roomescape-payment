@@ -20,6 +20,7 @@ import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSearchRequest;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.dto.CreateRegistrationCommand;
+import roomescape.reservation.service.dto.ReservationCreateEvent;
 import roomescape.reservation.service.dto.ReservationDeleteEvent;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
@@ -50,13 +51,14 @@ public class ReservationService {
     }
 
     public ReservationResponse getById(Long reservationId, LoginMember loginMember) {
-        Reservation reservation = getReservationById(reservationId);
+        Reservation reservation = reservationRepository.findByIdWithDetail(reservationId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 예약입니다, id: " + reservationId));
         validateCanReadPermission(reservation, loginMember);
         return new ReservationResponse(reservation);
     }
 
     private void validateCanReadPermission(Reservation checkReservation, LoginMember loginMember) {
-        if(loginMember.role() == MemberRole.ADMIN || checkReservation.isOwnedBy(loginMember.id())) {
+        if (loginMember.role() == MemberRole.ADMIN || checkReservation.isOwnedBy(loginMember.id())) {
             return;
         }
         log.warn("예약 조회 권한 없음 - memberId={}, reservationId={}, role={}", loginMember.id(), checkReservation.getId(), loginMember.role());
@@ -64,7 +66,20 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse registerReservation(CreateRegistrationCommand command) {
+    public ReservationResponse registerReservationForMember(CreateRegistrationCommand command) {
+        ReservationResponse reservationResponse = registerReservation(command);
+        Long reservationId = reservationResponse.id();
+        log.info("WaitingApprovedEvent 발행 - reservationId={}", reservationId);
+        eventPublisher.raise(new ReservationCreateEvent(reservationId));
+        return reservationResponse;
+    }
+
+    @Transactional
+    public ReservationResponse registerReservationForAdmin(CreateRegistrationCommand command) {
+        return registerReservation(command);
+    }
+
+    private ReservationResponse registerReservation(CreateRegistrationCommand command) {
         final ReservationTime reservationTime = getReservationTimeById(command.timeId());
         final Theme theme = getThemeById(command.themeId());
         final Member member = getMemberById(command.memberId());
@@ -73,6 +88,7 @@ public class ReservationService {
 
         validateCanRegistration(reservation);
         final Reservation saved = reservationRepository.save(reservation);
+
         log.info("예약 등록 완료 - reservationId={}", saved.getId());
         return new ReservationResponse(saved);
     }
@@ -101,13 +117,14 @@ public class ReservationService {
     public void validateOwnership(Long reservationId, Long memberId) {
         Reservation reservation = getReservationById(reservationId);
         Member member = getMemberById(memberId);
-        if(member.isAdmin() || reservation.isOwnedBy(memberId)) {
+        if (member.isAdmin() || reservation.isOwnedBy(memberId)) {
             return;
         }
         log.warn("해당 예약에 접근 권한이 없는 사용자 - reservationId={}, memberId={}, memberRole={}", reservationId, memberId, member.getRole());
         throw new ForbiddenException("해당 예약에 접근할 권한이 없습니다.");
     }
 
+    // Helper 메서드들
     private Reservation getReservationById(Long reservationId) {
         return reservationRepository.findById(reservationId)
                 .orElseThrow(() -> {

@@ -38,7 +38,6 @@ import roomescape.payment.dto.TossPaymentResponse;
 import roomescape.payment.infrastructure.TossRestClient;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationStatus;
-import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSearchRequest;
 import roomescape.reservation.repository.ReservationRepository;
@@ -149,7 +148,7 @@ class ReservationServiceTest extends IntegrationTest {
             LoginMember loginMember = LoginMember.from(member);
 
             // when
-            ReservationResponse result = service.registerReservation(
+            ReservationResponse result = service.registerReservationForMember(
                     new CreateRegistrationCommand(loginMember.id(), DEFAULT_DATE, time.getId(), theme.getId())
             );
 
@@ -168,16 +167,13 @@ class ReservationServiceTest extends IntegrationTest {
             ReservationTime time = dbHelper.insertTime(createTimeAt_10());
             Theme theme = dbHelper.insertTheme(createDefaultTheme());
             LocalDate pastDate = LocalDate.now().minusDays(1);
-            ReservationRequest request = new ReservationRequest(pastDate, time.getId(), theme.getId());
-
             Member member = dbHelper.insertMember(createDefaultMember_1());
-            LoginMember loginMember = LoginMember.from(member);
 
             // when & then
             CreateRegistrationCommand createRegistrationCommand = new CreateRegistrationCommand(member.getId(),
                     pastDate,
                     time.getId(), theme.getId());
-            assertThatThrownBy(() -> service.registerReservation(createRegistrationCommand))
+            assertThatThrownBy(() -> service.registerReservationForMember(createRegistrationCommand))
                     .isInstanceOf(ReservationException.class)
                     .hasMessage("지난 날짜와 시간에 대한 예약은 불가능합니다.");
         }

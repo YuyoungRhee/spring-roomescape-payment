@@ -451,12 +451,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /admin/reservations HTTP/1.1
 Content-Type: application/json
-Host: localhost:65027
-Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiOjE3NDkxOTUzNTR9.lx-jAx51RBrAvRwcmPXc4aYzXEQfe5YZGj0xW6bw2tKdwKZwRq_GqEIjEX-z5C7n49alkx9bKpbd2rahAFRmSQ
+Host: localhost:63642
+Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5NDQ2OTU4LCJleHAiOjE3NDk0NTA1NTh9.uHQ5lanx6tTHW_4hwezmGxStV03oR26KJoLiUrq-Z7DduyrgiwX0Twcn_DKwi-vqaEXhySS0yVUDOboKdIaCjg
 
 {
   "memberId" : 1,
-  "date" : [ 2025, 6, 7 ],
+  "date" : [ 2025, 6, 10 ],
   "timeId" : 1,
   "themeId" : 1
 }</code></pre>
@@ -472,7 +472,7 @@ Content-Type: application/json
 
 {
   "id" : 1,
-  "date" : "2025-06-07",
+  "date" : "2025-06-10",
   "time" : {
     "id" : 1,
     "startAt" : "10:00"
@@ -501,8 +501,8 @@ Content-Type: application/json
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /admin/reservations HTTP/1.1
-Host: localhost:65027
-Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiOjE3NDkxOTUzNTR9.lx-jAx51RBrAvRwcmPXc4aYzXEQfe5YZGj0xW6bw2tKdwKZwRq_GqEIjEX-z5C7n49alkx9bKpbd2rahAFRmSQ</code></pre>
+Host: localhost:63642
+Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5NDQ2OTU4LCJleHAiOjE3NDk0NTA1NTh9.uHQ5lanx6tTHW_4hwezmGxStV03oR26KJoLiUrq-Z7DduyrgiwX0Twcn_DKwi-vqaEXhySS0yVUDOboKdIaCjg</code></pre>
 </div>
 </div>
 </div>
@@ -515,7 +515,7 @@ Content-Type: application/json
 
 [ {
   "id" : 1,
-  "date" : "2025-06-07",
+  "date" : "2025-06-10",
   "time" : {
     "id" : 1,
     "startAt" : "10:00"
@@ -534,7 +534,7 @@ Content-Type: application/json
   }
 }, {
   "id" : 2,
-  "date" : "2025-06-07",
+  "date" : "2025-06-10",
   "time" : {
     "id" : 2,
     "startAt" : "11:00"
@@ -563,8 +563,8 @@ Content-Type: application/json
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /admin/reservations/1 HTTP/1.1
-Host: localhost:65027
-Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiOjE3NDkxOTUzNTR9.lx-jAx51RBrAvRwcmPXc4aYzXEQfe5YZGj0xW6bw2tKdwKZwRq_GqEIjEX-z5C7n49alkx9bKpbd2rahAFRmSQ</code></pre>
+Host: localhost:63642
+Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5NDQ2OTU4LCJleHAiOjE3NDk0NTA1NTh9.uHQ5lanx6tTHW_4hwezmGxStV03oR26KJoLiUrq-Z7DduyrgiwX0Twcn_DKwi-vqaEXhySS0yVUDOboKdIaCjg</code></pre>
 </div>
 </div>
 </div>
@@ -584,8 +584,8 @@ Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiO
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /admin/waitings/1 HTTP/1.1
-Host: localhost:64957
-Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiOjE3NDkxOTUzNTR9.lx-jAx51RBrAvRwcmPXc4aYzXEQfe5YZGj0xW6bw2tKdwKZwRq_GqEIjEX-z5C7n49alkx9bKpbd2rahAFRmSQ
+Host: localhost:63534
+Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5NDQ2OTU4LCJleHAiOjE3NDk0NTA1NTh9.uHQ5lanx6tTHW_4hwezmGxStV03oR26KJoLiUrq-Z7DduyrgiwX0Twcn_DKwi-vqaEXhySS0yVUDOboKdIaCjg
 Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
@@ -607,11 +607,11 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /reservations HTTP/1.1
 Content-Type: application/json
-Host: localhost:65027
-Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiOjE3NDkxOTUzNTR9.lx-jAx51RBrAvRwcmPXc4aYzXEQfe5YZGj0xW6bw2tKdwKZwRq_GqEIjEX-z5C7n49alkx9bKpbd2rahAFRmSQ
+Host: localhost:63642
+Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5NDQ2OTU5LCJleHAiOjE3NDk0NTA1NTl9.5DMfdmejDkWOI_kqG8BKAsqfoNdA0k5IF4JNIXz19ZIFFQkJV2qEUAnwVQAxyqPieETyQDhj15VcwhINWlQWtw
 
 {
-  "date" : "2025-06-07",
+  "date" : "2025-06-10",
   "timeId" : 1,
   "themeId" : 1
 }</code></pre>
@@ -627,7 +627,7 @@ Content-Type: application/json
 
 {
   "id" : 1,
-  "date" : "2025-06-07",
+  "date" : "2025-06-10",
   "time" : {
     "id" : 1,
     "startAt" : "10:00"
@@ -656,8 +656,8 @@ Content-Type: application/json
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /reservations/1 HTTP/1.1
-Host: localhost:65027
-Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5MTkxNzU0LCJleHAiOjE3NDkxOTUzNTR9.lx-jAx51RBrAvRwcmPXc4aYzXEQfe5YZGj0xW6bw2tKdwKZwRq_GqEIjEX-z5C7n49alkx9bKpbd2rahAFRmSQ</code></pre>
+Host: localhost:63642
+Cookie: token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ5NDQ2OTU5LCJleHAiOjE3NDk0NTA1NTl9.5DMfdmejDkWOI_kqG8BKAsqfoNdA0k5IF4JNIXz19ZIFFQkJV2qEUAnwVQAxyqPieETyQDhj15VcwhINWlQWtw</code></pre>
 </div>
 </div>
 </div>
@@ -670,7 +670,7 @@ Content-Type: application/json
 
 {
   "id" : 1,
-  "date" : "2025-06-07",
+  "date" : "2025-06-10",
   "time" : {
     "id" : 1,
     "startAt" : "10:00"
